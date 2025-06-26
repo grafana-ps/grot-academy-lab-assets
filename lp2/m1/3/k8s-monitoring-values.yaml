@@ -1,0 +1,16 @@
+cluster:
+  name: grot-academy
+alloy-metrics:
+  enabled: true
+clusterMetrics:
+  enabled: true
+annotationAutodiscovery:
+  enabled: true
+destinations:
+  - name: grafana-hosted-metrics
+    type: prometheus
+    url: <grafana-hosted-metrics-url>
+    auth:
+      type: basic
+      username: <grafana-username>
+      password: <grafana-password>
