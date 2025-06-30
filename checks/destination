@@ -5,21 +5,21 @@ echo "Checking for destination config."
 
 node=".destinations[] | select(.type == \"$1\")"
 
-n=$(yq "$node" /home/grafana/k8s-monitoring-values.yaml)
+n=$(yq "$node" "$2")
 if [[ "$n" != "" ]]; then
   echo "Great! You've set a destination type to $1."
 else
   fail-message "You need to set a $1 destination."
 fi
 
-c=$(yq "$node.name" /home/grafana/k8s-monitoring-values.yaml)
+c=$(yq "$node.name" "$2")
 if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
   echo "Great! You've set a destination name."
 else
   fail-message "You need to set a destination name."
 fi
 
-c=$(yq "$node.url" /home/grafana/k8s-monitoring-values.yaml)
+c=$(yq "$node.url" "$2")
 if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
   echo "Great! You've set a destination url."
   url="$c"
@@ -27,7 +27,7 @@ else
   fail-message "You need to set a destination url."
 fi
 
-c=$(yq "$node.auth.type" /home/grafana/k8s-monitoring-values.yaml)
+c=$(yq "$node.auth.type" "$2")
 if [[ "$c" == "basic" ]]; then
   echo "Great! You've setup basic auth."
 else
@@ -35,7 +35,7 @@ else
 fi
 
 q="$node.auth.username"
-c=$(yq "$q" /home/grafana/k8s-monitoring-values.yaml)
+c=$(yq "$q" "$2")
 if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
   echo "Great! You've set a username."
   username="$c"
@@ -43,12 +43,12 @@ else
   fail-message "You need to set a username."
 fi
 
-c=$(yq "$q + 1" /home/grafana/k8s-monitoring-values.yaml)
+c=$(yq "$q + 1" "$2")
 if [[ "$c" != "${username}1" ]]; then
   fail-message "You need to set a username as a string."
 fi
 
-c=$(yq "$node.auth.password" /home/grafana/k8s-monitoring-values.yaml)
+c=$(yq "$node.auth.password" "$2")
 if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
   echo "Great! You've set a password."
   password="$c"
