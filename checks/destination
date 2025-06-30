@@ -1,0 +1,85 @@
+#!/bin/bash
+set -euxo pipefail
+
+echo "Checking for destination config."
+
+node=".destinations[] | select(.type == \"$1\")"
+
+n=$(yq "$node" /home/grafana/k8s-monitoring-values.yaml)
+if [[ "$n" != "" ]]; then
+  echo "Great! You've set a destination type to $1."
+else
+  fail-message "You need to set a $1 destination."
+fi
+
+c=$(yq "$node.name" /home/grafana/k8s-monitoring-values.yaml)
+if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
+  echo "Great! You've set a destination name."
+else
+  fail-message "You need to set a destination name."
+fi
+
+c=$(yq "$node.url" /home/grafana/k8s-monitoring-values.yaml)
+if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
+  echo "Great! You've set a destination url."
+  url="$c"
+else
+  fail-message "You need to set a destination url."
+fi
+
+c=$(yq "$node.auth.type" /home/grafana/k8s-monitoring-values.yaml)
+if [[ "$c" == "basic" ]]; then
+  echo "Great! You've setup basic auth."
+else
+  fail-message "You need to setup basic auth."
+fi
+
+q="$node.auth.username"
+c=$(yq "$q" /home/grafana/k8s-monitoring-values.yaml)
+if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
+  echo "Great! You've set a username."
+  username="$c"
+else
+  fail-message "You need to set a username."
+fi
+
+c=$(yq "$q + 1" /home/grafana/k8s-monitoring-values.yaml)
+if [[ "$c" != "${username}1" ]]; then
+  fail-message "You need to set a username as a string."
+fi
+
+c=$(yq "$node.auth.password" /home/grafana/k8s-monitoring-values.yaml)
+if [[ "$c" != "null" ]] && [[ "$c" != "" ]]; then
+  echo "Great! You've set a password."
+  password="$c"
+else
+  fail-message "You need to set a password."
+fi
+
+if [[ "$1" == "prometheus" ]]; then
+  if [[ ! -f "./metrics-write" ]]; then
+    wget https://raw.githubusercontent.com/grafana-ps/grot-academy-lab-assets/refs/heads/main/checks/metrics-write -O metrics-write
+
+    chmod u+x metrics-write
+  fi
+
+  if ./metrics-write $username $password $url; then
+    echo "Great! You've connected to Grafana Cloud."
+  else
+    fail-message "You need to double check your credentials."
+  fi
+fi
+
+if [[ "$1" == "loki" ]]; then
+  if [[ ! -f "./logs-write" ]]; then
+    wget https://raw.githubusercontent.com/grafana-ps/grot-academy-lab-assets/refs/heads/main/checks/logs-write -O logs-write
+
+    chmod u+x logs-write
+  fi
+
+  if ./logs-write $username $password $url; then
+    echo "Great! You've connected to Grafana Cloud."
+  else
+    fail-message "You need to double check your credentials."
+  fi
+fi

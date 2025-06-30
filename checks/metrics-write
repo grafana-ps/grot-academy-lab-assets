@@ -1,0 +1,9 @@
+#!/bin/bash
+
+touch auth.yaml
+yq -i ".basic_auth.username=\"$1\" | .basic_auth.password=\"$2\"" auth.yaml
+
+touch metrics
+echo "grot_academy_check 1" > metrics
+
+promtool push metrics --http.config.file=auth.yaml $3 ./metrics
