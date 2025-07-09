@@ -1,0 +1,9 @@
+app:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
+db:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
+loadgen:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
