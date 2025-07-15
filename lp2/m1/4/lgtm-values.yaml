@@ -1,9 +1,9 @@
-app:
+api:
   podAnnotations:
     k8s.grafana.com/scrape: "true"
-db:
+authenticator:
   podAnnotations:
     k8s.grafana.com/scrape: "true"
-loadgen:
+loadGeneratorn:
   podAnnotations:
     k8s.grafana.com/scrape: "true"
