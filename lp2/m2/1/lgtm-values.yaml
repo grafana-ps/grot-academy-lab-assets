@@ -1,0 +1,9 @@
+api:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
+authenticator:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
+loadGeneratorn:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
