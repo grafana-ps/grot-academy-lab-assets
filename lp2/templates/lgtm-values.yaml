@@ -1,0 +1,11 @@
+opentelemetry:
+  url: http://k8s-monitoring-alloy-receiver:4318/v1/traces
+api:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
+authenticator:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
+loadGenerator:
+  podAnnotations:
+    k8s.grafana.com/scrape: "true"
