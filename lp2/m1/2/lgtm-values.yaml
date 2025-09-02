@@ -1,0 +1,4 @@
+api:
+  service:
+    type: LoadBalancer
+    nodePort: 30030
