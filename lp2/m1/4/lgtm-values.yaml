@@ -4,6 +4,6 @@ api:
 authenticator:
   podAnnotations:
     k8s.grafana.com/scrape: "true"
-loadGeneratorn:
+loadGenerator:
   podAnnotations:
     k8s.grafana.com/scrape: "true"
